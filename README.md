@@ -86,4 +86,3 @@ screen -S monitoring
 ./monitoring_log.sh
 ```
 
-Dengan menekan Enter di dalam blok kode yang dibungkus dengan tiga backticks (```), Markdown akan mengenali baris baru dan memformatnya sesuai dengan yang diharapkan. Ini membuat README Anda tetap rapi dan mudah dibaca.
