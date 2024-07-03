@@ -72,7 +72,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ### Example Code Block
 
-```bash
 # Download the script
 wget https://raw.githubusercontent.com/jericko8/Automated-Rollback-when-RPC-error-on-Airchain-Node/main/monitoring_log.sh
 
