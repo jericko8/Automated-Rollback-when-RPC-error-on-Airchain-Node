@@ -78,9 +78,16 @@ do
     # Memeriksa jika baris mengandung pesan kesalahan tertentu
     if echo "$line" | grep -q "» Failed to Transact Verify pod"; then
         echo -e "${RED}Masalah ditemukan: Failed to Transact Verify pod${NC}"
-        sleep 1
+        echo -e "${YELLOW}Memulai kembali StationD${NC}"
+        sleep 3
+        systemctl restart stationd 
+        sleep 3
+        echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        clear
+        display_message
     fi
 
+    #jika ditemukan error failed to get transaction by hash
     if echo "$line" | grep -q "» Failed to get transaction by hash: not found"; then
         echo -e "${RED}Masalah ditemukan: Failed to get transaction by hash: not found${NC}"
         sleep 1
@@ -93,10 +100,10 @@ do
         sleep 120
         echo -e "${GREEN}StationD Telah berhenti${NC}"
         sleep 1
-        echo "${GREEN}Memeriksa Pembaruan....."
+        echo -e "${GREEN}Memeriksa Pembaruan....."
         cd tracks && git pull 
         sleep 3
-        echo "${GREEN}Pembaruan Telah Berhasil..."
+        echo -e "${GREEN}Pembaruan Telah Berhasil..."
         sleep 1
         echo -e "${YELLOW}Memulai Rollback${NC}"
         go run cmd/main.go rollback
@@ -108,6 +115,7 @@ do
         systemctl restart stationd 
         sleep 3
         echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        clear
         display_message 
     fi
 
@@ -123,10 +131,10 @@ do
         sleep 120
         echo -e "${GREEN}StationD Telah berhenti${NC}"
         sleep 3
-        echo "${GREEN}Memeriksa Pembaruan....."
+        echo -e "${GREEN}Memeriksa Pembaruan....."
         cd tracks && git pull 
         sleep 3
-        echo "${GREEN}Pembaruan Telah Berhasil..."
+        echo -e "${GREEN}Pembaruan Telah Berhasil..."
         sleep 2
         echo -e "${YELLOW}Memulai Rollback${NC}"
         run_rollback
@@ -137,6 +145,7 @@ do
         systemctl restart stationd &
         spinner
         echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        clear
         display_message
         # Reset penghitung eror setelah menjalankan langkah-langkah
         error_count=0
