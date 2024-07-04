@@ -39,7 +39,6 @@ error_count=0
 
 
 #fungsi buat nambahin tulisan
-
 display_message() {
     local blue='\033[0;34m'      
     local NC='\033[0m'           
@@ -79,6 +78,25 @@ do
     # Memeriksa jika baris mengandung pesan kesalahan tertentu
     if echo "$line" | grep -q "» Failed to Transact Verify pod"; then
         echo -e "${RED}Masalah ditemukan: Failed to Transact Verify pod${NC}"
+        sleep 1
+        echo -e "${GREEN}Masuk ke HOME directory${NC}"
+        cd $HOME
+        sleep 3
+        echo -e "${YELLOW}Memberhentikan Stationd${NC}"
+        systemctl stop stationd &
+        spinner
+        sleep 120
+        echo -e "${GREEN}StationD Telah berhenti${NC}"
+        sleep 1
+        echo "${GREEN}Memeriksa Pembaruan....."
+        cd tracks && git pull 
+        sleep 3
+        echo "${GREEN}Pembaruan Telah Berhasil..."
+        sleep 1
+        echo -e "${YELLOW}Memulai Rollback${NC}"
+        go run cmd/main.go rollback
+        sleep 3
+        echo -e "${GREEN}Rollback Berhasil dilakukan${NC}"
         sleep 3
         echo -e "${YELLOW}Memulai kembali StationD${NC}"
         sleep 3
