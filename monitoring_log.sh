@@ -68,8 +68,6 @@ display_message() {
 
 # Memeriksa log secara terus-menerus
 #echo -e "${BLUE}Monitoring Logs for Error msg..${NC}"
-
-display_message 
 display_message 
 sudo journalctl -u stationd -f --no-hostname -o cat | while IFS= read -r line
 do
@@ -87,6 +85,7 @@ do
         systemctl restart stationd 
         sleep 3
         echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        display_message 
     fi
 
     # if echo "$line" | grep -q "» Failed to get transaction by hash: not found"; then
