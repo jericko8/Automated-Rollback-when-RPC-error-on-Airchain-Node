@@ -83,6 +83,7 @@ do
         systemctl restart stationd 
         sleep 3
         echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        sleep 2
         clear
         display_message
     fi
@@ -115,6 +116,7 @@ do
         systemctl restart stationd 
         sleep 3
         echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        sleep 2
         clear
         display_message 
     fi
@@ -145,6 +147,7 @@ do
         systemctl restart stationd &
         spinner
         echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        sleep 2
         clear
         display_message
         # Reset penghitung eror setelah menjalankan langkah-langkah
