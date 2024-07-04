@@ -79,6 +79,11 @@ do
     if echo "$line" | grep -q "» Failed to Transact Verify pod"; then
         echo -e "${RED}Masalah ditemukan: Failed to Transact Verify pod${NC}"
         sleep 1
+    fi
+
+    if echo "$line" | grep -q "» Failed to get transaction by hash: not found"; then
+        echo -e "${RED}Masalah ditemukan: Failed to get transaction by hash: not found${NC}"
+        sleep 1
         echo -e "${GREEN}Masuk ke HOME directory${NC}"
         cd $HOME
         sleep 3
@@ -105,17 +110,6 @@ do
         echo -e "${GREEN}StationD berhasil di Restart${NC}"
         display_message 
     fi
-
-    # if echo "$line" | grep -q "» Failed to get transaction by hash: not found"; then
-    #     echo -e "${RED}Masalah ditemukan: Failed to get transaction by hash: not found${NC}"
-    #     sleep 3
-    #     echo -e "${YELLOW}Memulai kembali StationD${NC}"
-    #     sleep 3
-    #     systemctl restart stationd 
-    #     sleep 3
-    #     echo -e "${GREEN}StationD berhasil di Restart${NC}"
-    #     # Tambahkan tindakan yang diinginkan di sini, jika ada
-    # fi
 
     # Jika ditemukan lebih dari empat eror
     if [ "$error_count" -gt 4 ]; then
