@@ -75,6 +75,18 @@ do
         ((error_count++))
     fi
     
+     if echo "$line" | grep -q "» Failed to Init VRF"; then
+        echo -e "${RED}Masalah ditemukan: » Failed to Init VRF${NC}"
+        echo -e "${YELLOW}Memulai kembali StationD${NC}"
+        sleep 3
+        systemctl restart stationd 
+        sleep 3
+        echo -e "${GREEN}StationD berhasil di Restart${NC}"
+        sleep 2
+        clear
+        display_message
+    fi
+    
     # Memeriksa jika baris mengandung pesan kesalahan tertentu
     if echo "$line" | grep -q "» Failed to Transact Verify pod"; then
         echo -e "${RED}Masalah ditemukan: Failed to Transact Verify pod${NC}"
