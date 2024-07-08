@@ -83,5 +83,11 @@ screen -S monitoring
 
 # Run the script
 ./monitoring_log.sh
+
+```
+
+## or you can git clone all repositories
+```
+https://github.com/jericko8/rollback.git
 ```
 
