@@ -34,6 +34,27 @@ spinner() {
     printf "    \b\b\b\b"
 }
 
+restart_stationd() {
+    cd $HOME/tracks
+    echo -e "${YELLOW}Memulai kembali StationD${NC}"
+    sleep 3
+    systemctl restart stationd 
+    sleep 3
+    echo -e "${GREEN}StationD berhasil di Restart${NC}"
+    sleep 2
+}
+
+shutdown_stationd() {
+    cd $HOME/tracks
+    sleep 3
+    echo -e "${YELLOW}Memberhentikan Stationd${NC}"
+    systemctl stop stationd &
+    spinner
+    sleep 120
+    echo -e "${GREEN}StationD Telah berhenti${NC}"
+    sleep 1
+}
+
 # Menginisialisasi penghitung eror
 error_count=0
 
@@ -75,26 +96,21 @@ do
         ((error_count++))
     fi
     
-     if echo "$line" | grep -q "Failed to Init VRF"; then
+    if echo "$line" | grep -q "Failed to Init VRF"; then
         echo -e "${RED}Masalah ditemukan: » Failed to Init VRF${NC}"
-        echo -e "${YELLOW}Memulai kembali StationD${NC}"
-        sleep 3
-        systemctl restart stationd 
-        sleep 3
-        echo -e "${GREEN}StationD berhasil di Restart${NC}"
-        sleep 2
-        clear
+        restart_stationd
+        display_message
+    fi
+
+    if echo "$line" | grep -q "» VRF record is nil"; then
+        echo -e "${RED}Masalah ditemukan: » VRF record is nil${NC}"
+        restart_stationd
         display_message
     fi
 
     if echo "$line" | grep -q "Failed to Validate VRF"; then
         echo -e "${RED}Masalah ditemukan: » Failed to Init VRF${NC}"
-        echo -e "${YELLOW}Memulai kembali StationD${NC}"
-        sleep 3
-        systemctl restart stationd 
-        sleep 3
-        echo -e "${GREEN}StationD berhasil di Restart${NC}"
-        sleep 2
+        restart_stationd
         clear
         display_message
     fi
@@ -102,26 +118,14 @@ do
     #Memeriksa jika ada Error : Switchyard client connection error
     if echo "$line" | grep -q "Switchyard client connection error"; then
         echo -e "${RED}Masalah ditemukan: Switchyard client connection error${NC}"
-        echo -e "${YELLOW}Memulai kembali StationD${NC}"
-        sleep 3
-        systemctl restart stationd 
-        sleep 3
-        echo -e "${GREEN}StationD berhasil di Restart${NC}"
-        sleep 2
-        clear
+        restart_stationd
         display_message
     fi
     
     # Memeriksa jika baris mengandung pesan kesalahan tertentu
     if echo "$line" | grep -q "» Failed to Transact Verify pod"; then
         echo -e "${RED}Masalah ditemukan: Failed to Transact Verify pod${NC}"
-        echo -e "${YELLOW}Memulai kembali StationD${NC}"
-        sleep 3
-        systemctl restart stationd 
-        sleep 3
-        echo -e "${GREEN}StationD berhasil di Restart${NC}"
-        sleep 2
-        clear
+        restart_stationd
         display_message
     fi
 
@@ -129,17 +133,9 @@ do
     if echo "$line" | grep -q "» Failed to get transaction by hash: not found"; then
         echo -e "${RED}Masalah ditemukan: Failed to get transaction by hash: not found${NC}"
         sleep 1
-        echo -e "${GREEN}Masuk ke HOME directory${NC}"
-        cd $HOME
-        sleep 3
-        echo -e "${YELLOW}Memberhentikan Stationd${NC}"
-        systemctl stop stationd &
-        spinner
-        sleep 120
-        echo -e "${GREEN}StationD Telah berhenti${NC}"
-        sleep 1
+        shutdown_stationd
         echo -e "${GREEN}Memeriksa Pembaruan....."
-        cd tracks && git pull 
+        git pull 
         sleep 3
         echo -e "${GREEN}Pembaruan Telah Berhasil..."
         sleep 1
@@ -148,13 +144,7 @@ do
         sleep 3
         echo -e "${GREEN}Rollback Berhasil dilakukan${NC}"
         sleep 3
-        echo -e "${YELLOW}Memulai kembali StationD${NC}"
-        sleep 3
-        systemctl restart stationd 
-        sleep 3
-        echo -e "${GREEN}StationD berhasil di Restart${NC}"
-        sleep 2
-        clear
+        restart_stationd
         display_message 
     fi
 
@@ -162,16 +152,9 @@ do
     if [ "$error_count" -gt 4 ]; then
         echo -e "${RED}Error berhasil ditemukan...${NC}"
         echo -e "${GREEN}Masuk ke HOME directory${NC}"
-        cd $HOME
-        sleep 3
-        echo -e "${YELLOW}Memberhentikan Stationd${NC}"
-        systemctl stop stationd &
-        spinner
-        sleep 120
-        echo -e "${GREEN}StationD Telah berhenti${NC}"
-        sleep 3
+        shutdown_stationd
         echo -e "${GREEN}Memeriksa Pembaruan....."
-        cd tracks && git pull 
+        git pull 
         sleep 3
         echo -e "${GREEN}Pembaruan Telah Berhasil..."
         sleep 2
@@ -180,12 +163,7 @@ do
         sleep 3
         echo -e "${GREEN}Rollback Berhasil dilakukan${NC}"
         sleep 3
-        echo -e "${YELLOW}Memulai kembali StationD${NC}"
-        systemctl restart stationd &
-        spinner
-        echo -e "${GREEN}StationD berhasil di Restart${NC}"
-        sleep 2
-        clear
+        restart_stationd
         display_message
         # Reset penghitung eror setelah menjalankan langkah-langkah
         error_count=0
